@@ -27,11 +27,11 @@ from accelerate.utils import BnbQuantizationConfig, load_and_quantize_model
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--server_name", type=str, default="127.0.0.1")
-parser.add_argument("--server_port", type=int, default=7860)
+parser.add_argument("--server_name", type=str, default="0.0.0.0")
+parser.add_argument("--server_port", type=int, default=7520)
 parser.add_argument("--share", action="store_true")
 parser.add_argument("--model_path", type=str, default="models/BAGEL-7B-MoT")
-parser.add_argument("--mode", type=int, default=1)
+parser.add_argument("--mode", type=int, default=2)
 parser.add_argument("--zh", action="store_true")
 parser.add_argument("--output_dir", type=str, default="output", help="Base directory to save generated images.")
 args = parser.parse_args()
@@ -263,8 +263,8 @@ with gr.Blocks() as demo:
     gr.Markdown("""<div> <img src="https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhojubrps/banner.png" alt="BAGEL" width="380"/> </div>""")
     
     with gr.Tab("📝 Text to Image") as tab_t2i_obj:
-        txt_input_t2i = gr.Textbox(label="Prompt", value="A female cosplayer portraying an ethereal fairy or elf, wearing a flowing dress made of delicate fabrics in soft, mystical colors like emerald green and silver. She has pointed ears, a gentle, enchanting expression, and her outfit is adorned with sparkling jewels and intricate patterns. The background is a magical forest with glowing plants, mystical creatures, and a serene atmosphere.")
-        with gr.Row(): show_thinking_t2i = gr.Checkbox(label="Thinking", value=False)
+        txt_input_t2i = gr.Textbox(label="Prompt", value="")
+        with gr.Row(): show_thinking_t2i = gr.Checkbox(label="Thinking", value=True)
         with gr.Accordion("Inference Hyperparameters", open=False) as t2i_hyperparams_accordion:
             with gr.Group():
                 with gr.Row(): 
@@ -302,13 +302,13 @@ with gr.Blocks() as demo:
     with gr.Tab("🖌️ Image Edit") as tab_edit_obj:
         with gr.Row():
             with gr.Column(scale=1): 
-                edit_image_input = gr.Image(label="Input Image", value=load_example_image('test_images/women.jpg'), type="pil")
-                edit_prompt = gr.Textbox(label="Prompt", value="She boards a modern subway, quietly reading a folded newspaper, wearing the same clothes.")
+                edit_image_input = gr.Image(label="Input Image", type="pil")
+                edit_prompt = gr.Textbox(label="Prompt", value="")
             with gr.Column(scale=1): 
                 edit_image_output_gallery = gr.Gallery(label="Result", columns=2, object_fit="contain", height="auto", preview=True, visible=True)
                 edit_thinking_output = gr.Textbox(label="Thinking Process", visible=False, lines=10)
         with gr.Row(): 
-            edit_show_thinking = gr.Checkbox(label="Thinking", value=False)
+            edit_show_thinking = gr.Checkbox(label="Thinking", value=True)
             enable_task_breakdown = gr.Checkbox(label="Enable Task Breakdown (Experimental)", value=False, info="LLM will try to break the prompt into N steps and apply them sequentially.")
         with gr.Accordion("Inference Hyperparameters", open=False) as edit_hyperparams_accordion:
             with gr.Group():
